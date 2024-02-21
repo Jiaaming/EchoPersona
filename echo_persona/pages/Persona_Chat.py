@@ -1,68 +1,47 @@
-import streamlit as st, tiktoken
-from langchain.chat_models import ChatOpenAI
-from langchain.utilities import GoogleSerperAPIWrapper
-from langchain.document_loaders import UnstructuredURLLoader
-from langchain.chains.summarize import load_summarize_chain
+import os
+from langchain.chains.question_answering import load_qa_chain
+
+from dotenv import load_dotenv
+import sys
+import streamlit as st
+import openai, langchain, pinecone
+from langchain.llms.openai import OpenAI
+from langchain.vectorstores.chroma import Chroma
+from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain.vectorstores import Pinecone
+
+sys.path.insert(1, os.environ.get("PROJECT_PATH"))
+from echo_persona.logic import utils, chains, models, prompts
 
 # Set API keys from session state
 openai_api_key = st.session_state.openai_api_key
-serper_api_key = st.session_state.serper_api_key
 
-# Streamlit app
-st.subheader('Persona Chat')
-num_results = st.number_input("Number of Search Results", min_value=3, max_value=10) 
-search_query = st.text_input("Enter Search Query")
-col1, col2 = st.columns(2)
+st.subheader('Persona Q&A')
 
-# If the 'Search' button is clicked
-if col1.button("Search"):
+# Get OpenAI API key, Pinecone API key and environment, and source document input
+pinecone_api_key = os.environ.get("PINECONE_API_KEY")
+pinecone_env = os.environ.get("PINECONE_ENV")
+embed_model = "text-embedding-ada-002"
+pinecone_index = "echopersona"
+# with st.sidebar:
+#     pinecone_index = st.text_input("Pinecone index name")
+
+query = st.text_input("Enter your query")
+embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
+
+if st.button("Submit"):
     # Validate inputs
-    if not openai_api_key or not serper_api_key:
-        st.error("Please provide the missing API keys in Settings.")
-    elif not search_query.strip():
-        st.error("Please provide the search query.")
+    if not openai_api_key or not pinecone_api_key or not pinecone_env or not pinecone_index or not query:
+        st.warning(f"Please upload the document and provide the missing fields.")
     else:
         try:
-            with st.spinner("Please wait..."):
-                # Show the top X relevant news articles from the previous week using Google Serper API
-                search = GoogleSerperAPIWrapper(type="news", tbs="qdr:w1", serper_api_key=serper_api_key)
-                result_dict = search.results(search_query)
+            # Save uploaded file temporarily to disk, load and split the file into pages, delete temp file
+            pc = Pinecone(api_key=pinecone_api_key, environment=pinecone_env)
+            docsearch = Pinecone.from_texts(query, embeddings, index_name=pinecone_index)
+            llm = OpenAI(temperature=0, openai_api_key=openai_api_key)
+            chain = load_qa_chain(llm, chain_type="stuff")
+            docs = docsearch.similarity_search(query)
+            chain.invoke(input_documents=docs, question=query)
 
-                if not result_dict['news']:
-                    st.error(f"No search results for: {search_query}.")
-                else:
-                    for i, item in zip(range(num_results), result_dict['news']):
-                        st.success(f"Title: {item['title']}\n\nLink: {item['link']}\n\nSnippet: {item['snippet']}")
         except Exception as e:
-            st.exception(f"Exception: {e}")
-
-# If 'Search & Summarize' button is clicked
-if col2.button("Search & Summarize"):
-    # Validate inputs
-    if not openai_api_key or not serper_api_key:
-        st.error("Please provide the missing API keys in Settings.")
-    elif not search_query.strip():
-        st.error("Please provide the search query.")
-    else:
-        try:
-            with st.spinner("Please wait..."):
-                # Show the top X relevant news articles from the previous week using Google Serper API
-                search = GoogleSerperAPIWrapper(type="news", tbs="qdr:w1", serper_api_key=serper_api_key)
-                result_dict = search.results(search_query)
-
-                if not result_dict['news']:
-                    st.error(f"No search results for: {search_query}.")
-                else:
-                    # Load URL data from the top X news search results
-                    for i, item in zip(range(num_results), result_dict['news']):
-                        loader = UnstructuredURLLoader(urls=[item['link']])
-                        data = loader.load()
-
-                        # Initialize the ChatOpenAI module, load and run the summarize chain
-                        llm = ChatOpenAI(temperature=0, model='gpt-3.5-turbo', openai_api_key=openai_api_key)
-                        chain = load_summarize_chain(llm, chain_type="map_reduce")
-                        summary = chain.run(data)
-
-                        st.success(f"Title: {item['title']}\n\nLink: {item['link']}\n\nSummary: {summary}")
-        except Exception as e:
-            st.exception(f"Exception: {e}")
+            st.error(f"An error occurred: {e}")

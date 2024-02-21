@@ -1,0 +1,61 @@
+{
+    "categories": {
+        "0": [
+            [
+                "emotional_expression",
+                1.0
+            ]
+        ],
+        "1": [
+            [
+                "emotional_expression",
+                0.75
+            ],
+            [
+                "personal_life_sharing",
+                0.25
+            ]
+        ],
+        "2": [
+            [
+                "opinions_and_views",
+                1.0
+            ]
+        ],
+        "3": [
+            [
+                "others",
+                1.0
+            ]
+        ],
+        "4": [
+            [
+                "emotional_expression",
+                0.8
+            ]
+        ]
+    },
+    "hobbies": {
+        "1": {
+            "res": [
+                "睡懒觉",
+                "哭",
+                "不孝"
+            ],
+            "score": 0.25
+        }
+    },
+    "personalities": {
+        "2": {
+            "res": {
+                "openness": 3,
+                "conscientiousness": -2,
+                "extroversion": -4,
+                "agreeableness": 2,
+                "neuroticism": -3
+
+            },
+            "score": 1.0
+        }
+    }
+}

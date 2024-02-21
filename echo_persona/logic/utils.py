@@ -5,12 +5,22 @@ from langchain_core.pydantic_v1 import BaseModel, Field
 # -*- coding: utf-8 -*-
 
 # 文件路径
-file_path = '../../media_source/hu.json'
 
 # 从文件中读取JSON数据
-def read_json_file(file_path):
-    with open(file_path, 'r', encoding='utf-8') as file:
-        return json.load(file)
+def read_json_file(file_obj):
+    """读取并解析上传的JSON文件内容
+
+    Args:
+        file_obj (UploadedFile): Streamlit上传的文件对象
+
+    Returns:
+        dict: 解析后的JSON数据
+    """
+    # 确保文件对象不为空
+    if file_obj is not None:
+        return json.load(file_obj)
+    else:
+        return None
 
 # 提取用户信息
 def extract_user_info(user_data):
@@ -29,7 +39,7 @@ def extract_weibo_texts(weibo_data):
     return weibo_texts
 
 
-def filter_and_sort_categories(distribution, min_portion):
+def filter_and_sort_categories(distribution, min_portion=25):
     """
     过滤并排序分类
 
@@ -48,4 +58,14 @@ def filter_and_sort_categories(distribution, min_portion):
 
     return sorted_filtered
 
-print(os.environ.get('OPENAI_API_KEY'))
+
+
+# 定义保存为JSON文件的函数
+def save_to_json(categories, hobbies, personalities, file_path="analysis_result.json"):
+    data = {
+        "categories": categories,
+        "hobbies": hobbies,
+        "personalities": personalities
+    }
+    with open(file_path, 'w') as json_file:
+        json.dump(data, json_file, ensure_ascii=False, indent=4)
