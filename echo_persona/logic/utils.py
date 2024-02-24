@@ -35,7 +35,8 @@ def extract_user_info(user_data):
 
 # 提取微博信息
 def extract_weibo_texts(weibo_data):
-    weibo_texts = [weibo.get("text", "") for weibo in weibo_data]
+    # "created_at": "2024-01-11T20:36:22",
+    weibo_texts = [{"text": weibo.get("text", ""), "time": weibo.get("created_at", "")}for weibo in weibo_data]
     return weibo_texts
 
 

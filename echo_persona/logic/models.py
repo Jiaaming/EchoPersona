@@ -1,6 +1,29 @@
 from langchain_core.pydantic_v1 import BaseModel, Field
 
 
+class ViewpointScore(BaseModel):
+    sociability: float = Field(
+        0,
+        description="社会性向"
+    )
+    equity: float = Field(
+        0,
+        description="平等观"
+    )
+    cultural_Outlook: float = Field(
+        0,
+        description="文化观"
+    )
+    technological_stance: float = Field(
+        0,
+        description="技术态度"
+    )
+    lifestyle: float = Field(
+        0,
+        description="生活方式"
+    )
+
+
 class PersonalityScore(BaseModel):
     openness: float = Field(
         0,
