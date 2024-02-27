@@ -3,47 +3,47 @@ from langchain_core.pydantic_v1 import BaseModel, Field
 
 class ViewpointScore(BaseModel):
     sociability: float = Field(
-        0,
+        0.0,
         description="社会性向"
     )
     equity: float = Field(
-        0,
+        0.0,
         description="平等观"
     )
     cultural_Outlook: float = Field(
-        0,
+        0.0,
         description="文化观"
     )
     technological_stance: float = Field(
-        0,
+        0.0,
         description="技术态度"
     )
     lifestyle: float = Field(
-        0,
+        0.0,
         description="生活方式"
     )
 
 
-class PersonalityScore(BaseModel):
-    openness: float = Field(
-        0,
-        description="开放性"
+class EmotionalScore(BaseModel):
+    happiness: float = Field(
+        0.0,
+        description="快乐/喜悦"
     )
-    conscientiousness: float = Field(
-        0,
-        description="责任心"
+    sadness: float = Field(
+        0.0,
+        description="悲伤/哀愁"
     )
-    extraversion: float = Field(
-        0,
-        description="外向性"
+    anger: float = Field(
+        0.0,
+        description="愤怒/生气"
     )
-    agreeableness: float = Field(
-        0,
-        description="宜人性"
+    anxiety: float = Field(
+        0.0,
+        description="恐惧/焦虑"
     )
-    neuroticism: float = Field(
-        0,
-        description="情绪稳定性（神经质）"
+    shock: float = Field(
+        0.0,
+        description="惊喜/震惊"
     )
 
 

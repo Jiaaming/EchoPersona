@@ -36,7 +36,7 @@ def extract_user_info(user_data):
 # 提取微博信息
 def extract_weibo_texts(weibo_data):
     # "created_at": "2024-01-11T20:36:22",
-    weibo_texts = [{"text": weibo.get("text", ""), "time": weibo.get("created_at", "")}for weibo in weibo_data]
+    weibo_texts = ["text: "+ weibo.get("text", "") + " time: " + weibo.get("created_at", "") for weibo in weibo_data]
     return weibo_texts
 
 
@@ -62,11 +62,12 @@ def filter_and_sort_categories(distribution, min_portion=25):
 
 
 # 定义保存为JSON文件的函数
-def save_to_json(categories, hobbies, personalities, file_path="analysis_result.json"):
+def save_to_json(opinions_and_views, personal_life_sharing, emotional_expression, file_path="analysis_result.json"):
+
     data = {
-        "categories": categories,
-        "hobbies": hobbies,
-        "personalities": personalities
+        "opinions_and_views": opinions_and_views,
+        "personal_life_sharing": personal_life_sharing,
+        "emotional_expression": emotional_expression
     }
     with open(file_path, 'w') as json_file:
         json.dump(data, json_file, ensure_ascii=False, indent=4)

@@ -50,6 +50,8 @@ index_name = "echopersona"
 number = st.slider('选择分析文本的数量', min_value=3, max_value=10, value=5, step=1)
 temperature = st.slider('设置生成文本的创造性', min_value=0.0, max_value=1.0, value=0.5, step=0.1)
 
+if 'docsearch' not in st.session_state:
+    st.session_state.docsearch = None
 
 query = st.text_input("Enter your query")
 embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
