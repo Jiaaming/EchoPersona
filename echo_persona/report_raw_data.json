@@ -1,0 +1,45 @@
+{
+    "opinions_and_views": {
+        "sociability": [
+            5
+        ],
+        "equity": [
+            5
+        ],
+        "cultural_Outlook": [
+            -5
+        ],
+        "technological_stance": [
+            -5
+        ],
+        "lifestyle": [
+            -5
+        ]
+    },
+    "personal_life_sharing": [
+        "新年",
+        "守望"
+    ],
+    "emotional_expression": {
+        "happiness": [
+            3,
+            5
+        ],
+        "sadness": [
+            0,
+            0
+        ],
+        "anger": [
+            0,
+            0
+        ],
+        "anxiety": [
+            0,
+            0
+        ],
+        "shock": [
+            0,
+            0
+        ]
+    }
+}

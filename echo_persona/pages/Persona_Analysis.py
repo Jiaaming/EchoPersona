@@ -80,7 +80,7 @@ def store_text(category: str, text: str):
 
 # If the 'Summarize' button is clicked
 
-def analyze_category(category, text_list, chain_function, result_sum):
+def analyze_category(category, text_list, chain_function, result_sum, n):
     """
     分析特定类别的文本列表，并更新结果汇总。
 
@@ -90,17 +90,19 @@ def analyze_category(category, text_list, chain_function, result_sum):
     :param result_sum: 结果汇总字典
     """
     print(f"Analyzing {category}...")
-    combined_texts = [" ".join(text_list[i:i + 20]) for i in range(0, len(text_list), 20)]
+    combined_texts = [" ".join(text_list[i:i + n]) for i in range(0, len(text_list), n)]
 
     for combined_text in combined_texts:
         result = chain_function.run(combined_text)
         print(result)  # 假设每个chain_function的输出是一个字典
-        for key, value in result.items():
-            if isinstance(result_sum[key], list):
-                result_sum[key].append(value)
-            else:
-                result_sum[key] = value  # 对于非列表类型的结果处理
+        if isinstance(result, list):
+            for keyword in result:
+                result_sum.append(keyword)
+        else:
+            for key, value in result.items():
+                result_sum[key].append(value)  # 对于非列表类型的结果处理
 
+n = st.slider('k value', min_value=1, max_value=40, value=20, step=1)
 
 if st.button("Classify first!") and namespace:
     # Validate inputs
@@ -120,65 +122,68 @@ if st.button("Classify first!") and namespace:
 
                 # 提取微博信息
                 weibo_texts = utils.extract_weibo_texts(json_data.get("weibo", []))
-                print(weibo_texts)
 
 
-                Pinecone.from_texts(weibo_texts, embeddings, index_name=index_name, namespace=namespace)
-                print("ok")
-
-                for i, text in enumerate(weibo_texts[:5]):  # 假设只展示前5条微博
-                    # st.write(text)
-                    # classify the text
-                    print(i, text)
-
-                    result = utils.filter_and_sort_categories(classify_chain.run(text), min_portion=0.25)
-                    # result: {'opinions_and_views': 75, 'others': 25}
-                    for category, score in result:
-                        print(f"{category}: {score}")
-                        st.write(f"{category}: {score}")
-                        # Start with the highest score, analyze the text
-                        store_text(category, text)
-                # st.success(summary)
-                utils.save_to_json(opinions_and_views, personal_life_sharing, emotional_expression)
+                # Pinecone.from_texts(weibo_texts, embeddings, index_name=index_name, namespace=namespace)
+                # for i, text in enumerate(weibo_texts[:5]):  # 假设只展示前5条微博
+                #     # st.write(text)
+                #     # classify the text
+                #     print(i, text)
+                #
+                #     result = utils.filter_and_sort_categories(classify_chain.run(text), min_portion=0.25)
+                #     # result: {'opinions_and_views': 75, 'others': 25}
+                #     for category, score in result:
+                #         print(f"{category}: {score}")
+                #         st.write(f"{category}: {score}")
+                #         # Start with the highest score, analyze the text
+                #         store_text(category, text)
+                # # st.success(summary)
+                # utils.save_to_json(opinions_and_views, personal_life_sharing, emotional_expression)
                 st.write("Finished classify! Now let's analyze user text")
 
-                st.button("Let's Analyze!")
-                with open("../analysis_result.json", "r") as f:
-                    texts = json.load(f)
-                    results_sum = {
-                        "opinions_and_views": {
-                            "sociability": [],
-                            "equity": [],
-                            "cultural_Outlook": [],
-                            "technological_stance": [],
-                            "lifestyle": []
-                        },
-                        "personal_life_sharing": [],
-                        "emotional_expression": {
-                            "happiness": [],
-                            "sadness": [],
-                            "anger": [],
-                            "anxiety": [],
-                            "shock": []
-                        }
-                    }
-
-                    # 分析每个类别
-                    analyze_category("opinions_and_views", texts["opinions_and_views"],
-                                     opinions_and_views_chain, results_sum["opinions_and_views"])
-                    analyze_category("personal_life_sharing", texts["personal_life_sharing"],
-                                     life_sharing_chain, results_sum["personal_life_sharing"])
-                    analyze_category("emotional_expression", texts["emotional_expression"],
-                                     emotional_expression_chain, results_sum["emotional_expression"])
-
-                    # 结果处理，例如输出或保存
-                    print(results_sum)
-                    with open("../report_raw_data.json", "w") as f:
-                        json.dump(results_sum, f)
-
-
         except Exception as e:
-                utils.save_to_json(st.session_state.CATEGORIES, st.session_state.HOBBIES, st.session_state.PERSONALITIES)
                 st.error(f"An error occurred: {str(e)}")
                 # 或者
                 st.error(f"An error occurred: {e.__class__.__name__}: {e}")
+
+if st.button("Let's Analyze!"):
+    try:
+        with st.spinner('Please wait...'):
+            # 读取分析结果
+            with open("analysis_result.json", "r") as f:
+                texts = json.load(f)
+
+            results_sum = {
+                "opinions_and_views": {
+                    "sociability": [],
+                    "equity": [],
+                    "cultural_Outlook": [],
+                    "technological_stance": [],
+                    "lifestyle": []
+                },
+                "personal_life_sharing": [],
+                "emotional_expression": {
+                    "happiness": [],
+                    "sadness": [],
+                    "anger": [],
+                    "anxiety": [],
+                    "shock": []
+                }
+            }
+            print("analyzing~~~")
+
+            # 分析每个类别
+            analyze_category("opinions_and_views", texts["opinions_and_views"],
+                             opinions_and_views_chain, results_sum["opinions_and_views"], n)
+            analyze_category("personal_life_sharing", texts["personal_life_sharing"],
+                             life_sharing_chain, results_sum["personal_life_sharing"], n)
+            analyze_category("emotional_expression", texts["emotional_expression"],
+                             emotional_expression_chain, results_sum["emotional_expression"], n)
+
+            # 结果处理，例如输出或保存
+            print(results_sum)
+            file_path = "report_raw_data.json"
+            with open(file_path, 'w') as json_file:
+                json.dump(results_sum, json_file, ensure_ascii=False, indent=4)
+    except Exception as e:
+        st.error(f"An error occurred: {e}")

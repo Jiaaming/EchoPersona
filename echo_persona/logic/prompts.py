@@ -14,7 +14,14 @@ def get_emotional_prompt():
     
     5) 惊喜/震惊（shock）：通常由不预期事件的提及或反应表达，可能会用到“惊讶”或“没想到”等词汇。
     
-    返回json格式的数据，包括五个特质的评分。
+    返回json格式的数据，包括五个特质的评分。如下：
+    {
+    "happiness": 0,
+    "sadness": 0,
+    "anger": 0,
+    "anxiety": 0,
+    "shock": 0,
+    }
     用户发言如下：
     """
     return text
@@ -30,7 +37,14 @@ def get_viewpoint_prompt():
     4) 技术态度 (Technological Stance): 从 乐观（Optimism，-5）到 悲观（Pessimism，5）。技术乐观者相信科技进步带来积极变化，技术悲观者担忧其负面影响。
     5) 生活方式 (Lifestyle): 从 自律（Discipline，-5）到 享乐（Hedonism，5）。自律强调自我控制和规律性，享乐追求个人快乐和感官满足。
     
-    返回json格式的数据，包括五个特质的评分。
+    返回json格式的数据，包括五个特质的评分。如下：
+    {
+    "sociability": 5,
+    "equity": 5,
+    "cultural_Outlook": -5,
+    "technological_stance": -5,
+    "lifestyle": -5
+    }
     用户发言如下：
     
     """
@@ -53,7 +67,8 @@ def get_classify_prompt():
     3) 情感表达：用户表达自己的情感、情绪、心情等。
     4) 其它：仅当用户发言完全不知所云，无法识别，无法理解时。
     
-    判断每个类别在发言中所占的比例。如果某个类别不适用，请将其比例设为0.0。请提供一个总和应为1.0的分布，。返回json格式的数据。
+    判断每个类别在发言中所占的比例。如果某个类别不适用，请将其比例设为0.0。请提供一个总和应为1.0的分布。
+    返回json格式的数据
     用户发言如下：
     """
     return text
