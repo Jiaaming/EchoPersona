@@ -5,22 +5,18 @@ def get_emotional_prompt():
     使用0到5的分数范围，其中0分代表无法获取此信息。尝试从用户的社交媒体发言、互动和表现出的行为中寻找证据支持你的评分。
 
     1) 快乐/喜悦（happiness）：文本中经常通过积极的描述、感叹号、以及与幸福相关的事件或情感状态的讨论来表达。
-    
     2) 悲伤/哀愁（sadness）：用户可能会分享失落感、挫折或其他负面事件来表达悲伤，通常伴随着消极的词汇和叙述。
-    
     3) 愤怒/生气（anger）：文本中的愤怒可能通过批评性的语言、对不公或不满意的情况的强烈反应来体现。
-    
     4) 恐惧/焦虑（anxiety）：用户可能会表达对未来的担忧、不确定性或某种威胁的恐惧。
-    
     5) 惊喜/震惊（shock）：通常由不预期事件的提及或反应表达，可能会用到“惊讶”或“没想到”等词汇。
     
-    返回json格式的数据，包括五个特质的评分。如下：
+    返回json格式的数据，包括五个特质的评分。例如：
     {
-    "happiness": 0,
-    "sadness": 0,
-    "anger": 0,
-    "anxiety": 0,
-    "shock": 0,
+    "happiness": float,
+    "sadness": float,
+    "anger": float,
+    "anxiety": float,
+    "shock": float,
     }
     用户发言如下：
     """
@@ -37,13 +33,13 @@ def get_viewpoint_prompt():
     4) 技术态度 (Technological Stance): 从 乐观（Optimism，-5）到 悲观（Pessimism，5）。技术乐观者相信科技进步带来积极变化，技术悲观者担忧其负面影响。
     5) 生活方式 (Lifestyle): 从 自律（Discipline，-5）到 享乐（Hedonism，5）。自律强调自我控制和规律性，享乐追求个人快乐和感官满足。
     
-    返回json格式的数据，包括五个特质的评分。如下：
+    返回json格式的数据，包括五个特质的评分。例如：
     {
-    "sociability": 5,
-    "equity": 5,
-    "cultural_Outlook": -5,
-    "technological_stance": -5,
-    "lifestyle": -5
+    "sociability": float,
+    "equity": float,
+    "cultural_Outlook": float,
+    "technological_stance": float,
+    "lifestyle": float
     }
     用户发言如下：
     

@@ -27,6 +27,6 @@ st.header("Welcome to EchoPersona! 👋")
 
 st.markdown(
     """
-
+    EchoPersona is a tool that uses OpenAI's GPT-3.5 to analyze and generate text based on a user's input.
     """
 )

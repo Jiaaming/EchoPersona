@@ -1,45 +1,62 @@
 {
     "opinions_and_views": {
         "sociability": [
-            5
+            5,
+            0
         ],
         "equity": [
-            5
+            5,
+            -3
         ],
         "cultural_Outlook": [
-            -5
+            0,
+            0
         ],
         "technological_stance": [
-            -5
+            0,
+            -2
         ],
         "lifestyle": [
-            -5
+            0,
+            0
         ]
     },
     "personal_life_sharing": [
         "新年",
-        "守望"
+        "守望",
+        "足球",
+        "游戏"
     ],
     "emotional_expression": {
         "happiness": [
             3,
-            5
+            5,
+            0,
+            0
         ],
         "sadness": [
             0,
+            0,
+            4,
             0
         ],
         "anger": [
             0,
+            0,
+            3,
             0
         ],
         "anxiety": [
             0,
-            0
+            0,
+            2,
+            1
         ],
         "shock": [
             0,
-            0
+            0,
+            0,
+            5
         ]
     }
 }

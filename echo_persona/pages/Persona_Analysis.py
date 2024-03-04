@@ -125,6 +125,7 @@ if st.button("Classify first!") and namespace:
 
 
                 # Pinecone.from_texts(weibo_texts, embeddings, index_name=index_name, namespace=namespace)
+
                 # for i, text in enumerate(weibo_texts[:5]):  # 假设只展示前5条微博
                 #     # st.write(text)
                 #     # classify the text
