@@ -1,5 +1,5 @@
 # My Ongoing ECNU Graduation project
-![image](h![img.png](img.png)ttps://img.shields.io/badge/Python-3.11-blue.svg) 
+![image](https://img.shields.io/badge/Python-3.11-blue.svg) 
 
 ![img alt](EchoPersona.jpg)
 
