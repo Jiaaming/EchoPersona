@@ -5,7 +5,7 @@ from langchain_core.pydantic_v1 import BaseModel
 from langchain_core.output_parsers import StrOutputParser
 
 
-class JsonScoreChain:
+class JsonChain:
     """
 
     openai_api_key = "your_openai_api_key"

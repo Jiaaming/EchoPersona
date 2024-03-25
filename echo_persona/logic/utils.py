@@ -62,7 +62,7 @@ def filter_and_sort_categories(distribution, min_portion=25):
 
 
 # 定义保存为JSON文件的函数
-def save_to_json(opinions_and_views, personal_life_sharing, emotional_expression, file_path="analysis_result.json"):
+def save_to_json(opinions_and_views, personal_life_sharing, emotional_expression, file_path="zoufan_analysis_result.json"):
 
     data = {
         "opinions_and_views": opinions_and_views,

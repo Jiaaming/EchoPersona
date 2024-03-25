@@ -49,6 +49,7 @@ index_name = "echopersona"
 
 number = st.slider('选择分析文本的数量', min_value=3, max_value=10, value=5, step=1)
 temperature = st.slider('设置生成文本的创造性', min_value=0.0, max_value=1.0, value=0.5, step=0.1)
+namespace = st.text_input("输入命名空间", value="hu")
 
 if 'docsearch' not in st.session_state:
     st.session_state.docsearch = None
@@ -58,7 +59,7 @@ embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
 keywords_chain = chains.ListStrChain(openai_api_key=openai_api_key, p_text=prompts.get_keywords_prompt())
 summary_chain = chains.CommonChain(openai_api_key=openai_api_key, p_text=prompts.get_summary_prompt(), temperature=temperature)
 
-if st.button("Submit"):
+if st.button("Submit") and namespace:
     from pinecone import Pinecone
 
     # initialize connection to pinecone (get API key at app.pinecone.io)
@@ -76,10 +77,11 @@ if st.button("Submit"):
             # Save uploaded file temporarily to disk, load and split the file into pages, delete temp file
             index = pc.Index(index_name)
 
-            docsearch = Pinecone.from_texts([], embeddings, index_name = index_name)
+            docsearch = Pinecone.from_texts([], embeddings, index_name = index_name,namespace=namespace)
 
             keywords_list = keywords_chain.run(query=query)
             keywords_str = ' '.join(keywords_list)
+            st.write("关键词：")
             st.write(keywords_str)
 
             docs = docsearch.similarity_search(keywords_str, k=number)
@@ -87,6 +89,7 @@ if st.button("Submit"):
             docs_str = "用户发言：" + '\n'.join([t.page_content for t in docs])
             q = "提问：" + query + "\n" + docs_str
             res = summary_chain.run(query=docs_str)
+            print(res)
             st.write(res)
         except Exception as e:
             st.error(f"An error occurred: {e}")
