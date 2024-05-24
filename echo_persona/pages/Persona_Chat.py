@@ -63,24 +63,21 @@ if st.button("Submit") and namespace:
         st.warning(f"Please analyze the data first.")
     else:
         try:
-            from langchain.vectorstores import Pinecone
-
+            from langchain_pinecone import PineconeVectorStore
             # Save uploaded file temporarily to disk, load and split the file into pages, delete temp file
             index = pc.Index(index_name)
-
-            docsearch = Pinecone.from_texts([], embeddings, index_name = index_name, namespace=namespace)
-
-            # keywords_list = keywords_chain.run(query=query)
-            # keywords_str = ' '.join(keywords_list)
-            # st.write("关键词：")
-            # st.write(keywords_str)
-
-            docs = docsearch.similarity_search(query, k=number)
+            vectorstore = PineconeVectorStore(
+                index, embeddings, namespace=namespace
+            )
+            docs = vectorstore.similarity_search(
+                query,  # our search query
+                k=number
+            )
             print(docs)
             docs_str = "根据这些用户发言，回答提问：" + '\n'.join([t.page_content for t in docs])
             q = "提问：" + query + "\n" + docs_str
             res = summary_chain.run(query=q)
-            print(res)
+            #print(res)
             st.write(res)
         except Exception as e:
             st.error(f"An error occurred: {e}")

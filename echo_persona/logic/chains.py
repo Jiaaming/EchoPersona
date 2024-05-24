@@ -6,16 +6,6 @@ from langchain_core.output_parsers import StrOutputParser
 
 
 class JsonChain:
-    """
-
-    openai_api_key = "your_openai_api_key"
-    instruction = "请仔细阅读以下用户在社交媒体上的发言，并分析其主要内容类别..."
-    chain = SpeechCategoryChain(openai_api_key=openai_api_key, instruction=instruction)
-    result = chain.run("这里是用户发言内容")
-    print("分类结果：", result)
-
-    """
-
     def __init__(self, openai_api_key: str, p_text: str, pydantic_object: BaseModel, temperature: float = 0.0):
         self.llm = ChatOpenAI(openai_api_key=openai_api_key, temperature=temperature)
         self.p_text = p_text
