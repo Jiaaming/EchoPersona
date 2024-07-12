@@ -2,3 +2,4 @@
 echo_persona/jupyter_notebook
 .idea
 *.pyc
+.DS_Store
